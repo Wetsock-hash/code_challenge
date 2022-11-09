@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--
+Code challnge recieved from Winnie Zhao for ACS Foundation
+By Greg Richardson
+email:gregrichardson321@gmail.com
+
+This challenge I was asked to create a simple webapp that would
+collect user information and store it in some way that could be used 
+later. The appraoch I have taken is a simple web form that uses a few
+statements such as try catch, if else if, and functions to print
+data to console along with storing in a variable that could exported
+and finally the alert statement. 
+-->
+<html ng-app="myApp">
+    <head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js" type="text/javascript"></script>
+		<script src="http://metawidget.org/js/3.5/metawidget-core.min.js" type="text/javascript"></script>
+		<script src="http://metawidget.org/js/3.5/metawidget-angular.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			
+			angular.module( 'myApp', [ 'metawidget' ] )
+			.controller( 'myController', function( $scope ) {
+				$scope.metawidgetConfig = {
+					inspector: new metawidget.inspector.JsonSchemaInspector( {
+						properties: {
+							firstname: {										// Clients details are taken first and the program will split once the checkbox
+								type: 'string',									// children has been turned to true. 
+								required: true									 
+							},													
+							surname: {											
+								type: 'string',									
+								required: true									
+							},
+							DoB: {
+								type: 'date',
+								minimum: 0,
+								required: true,
+							},
+							notes: {
+								type: 'string',					
+								large: true
+							},
+							children: {
+								type: 'boolean',
+							},
+							child_1_name: {
+								type: 'string'
+							},
+							child_1_surname: {
+								type: 'string'
+							},
+							child_1_dob: {
+								type: 'date',
+							},
+							child_2_name: {
+								type: 'string'
+							},
+							child_2_surname: {
+								type: 'string'
+							},
+							child_2_dob: {
+								type: 'date',
+							},
+							child_3_name: {
+								type: 'string'
+							},
+							child_3_surname: {
+								type: 'string'
+							},
+							child_3_dob: {
+								type: 'date',
+							},
+						}
+					} )
+				}
+				const clientArray = []; // This array variable will grow with every submission 
+			    $scope.save = function() {
+					// Try and catch used for some basic error handling
+					try {
+						//alert($scope.person.children); // Alert used to test
+						// If and else if used to capture the fork in data collection
+						// if children boolean is true all data is captured
+						if ($scope.person.children == null){ // If statement used to determne presence of children
+							clientArray.push("Client:" + ' ' + $scope.person.firstname + ' ' + $scope.person.surname + ' ' + $scope.person.DoB + ' ' + $scope.person.notes + ' ' + $scope.person.children);
+							//console.log(client);
+						}
+						else if ($scope.person.children == true){ // If children are present then data is collect
+							clientArray.push("Client:" + ' ' + $scope.person.firstname + ' ' + $scope.person.surname + ' ' + $scope.person.DoB + ' ' + $scope.person.notes + ' ' + $scope.person.children + ' ' +
+							"Children:" + ' ' + $scope.person.child_1_name + ' ' + $scope.person.child_1_surname + ' ' + $scope.person.child_1_dob + ' ' + 
+							$scope.person.child_2_name + ' ' + $scope.person.child_2_surname + ' ' + $scope.person.child_2_dob + ' ' + $scope.person.child_3_name + ' ' + 
+							$scope.person.child_3_surname + ' ' + $scope.person.child_3_dob);
+						};
+					}
+					// catch to alert the user that the form is missing components
+					catch(err){
+						alert("FORM HAS MISSING DATA PLEASE ENSURE ALL MARKED FIELDS HAVE BEEN FILLED")
+					};
+				}
+				// Additional function just as another way to display user data and show it's original code
+				$scope.alertDisplay = function() {
+					alert(clientArray);
+				};
+				// This function will console.log all collected data from previous function $scope.save 
+				$scope.consoleDisplay = function() {
+					console.log(JSON.stringify(clientArray))
+				};
+			}   );
+		</script>
+		<!--
+		Below is the style of the metawidget form and buttons.
+		This code is based off code provided by kennard consulting
+		and can be accessed via https://github.com/metawidget/metawidget-js/blob/master/examples/angular/with-json-schema.html
+		alterations and modifications are original code. 
+		-->
+	    <style>
+			#metawidget {
+				border: 1px solid #fffff;
+				width: 350px;
+				border-radius: 12px;
+				padding: 10px;
+				margin: 50px auto;
+				display: block;
+			}
+			#metawidget button {
+				display: block;
+				margin: 10px auto 0px;
+			}
+		</style>
+    </head>
+    <body ng-controller="myController">
+		
+	    <metawidget id="metawidget" ng-model="person" config="metawidgetConfig">
+			<button ng-click="save()">Save</button>
+			<button ng-click="alertDisplay()">Alert Display Clients</button>
+			<button ng-click="consoleDisplay()">Console Display Clients</button>
+	    </metawidget>
+    </body>
+</html>
